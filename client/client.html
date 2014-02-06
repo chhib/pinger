@@ -1,0 +1,84 @@
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pinger</title>
+
+</head>
+
+<body>
+
+  {{> hello}}
+
+</body>
+
+
+
+
+
+<template name="hello">
+<div class="container">
+<div class="row">
+<div class="col-md-12">
+  <h1>{{greeting}}</h1>
+</div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+
+    <h2>Set up new interval</h2>
+    
+    
+    <div class="form-group">
+      <label for="cid">clientId / cid</label>
+      <input class="form-control" type="text" id="cid" />
+    </div>
+    <div class="form-group">
+      <label for="page">pagePath / dp</label>
+      <input class="form-control" type="text" id="page"/>
+    </div>
+   
+
+    <div class="form-group">
+      <label for="event-cat">eventCategory / ec</label>
+      <input class="form-control" type="text" id="event-cat"/>
+    </div>
+
+
+    <div class="form-group">
+      <label for="event-act">eventAction / ea</label>
+      <input class="form-control" type="text" id="event-act"/>
+    </div>
+
+    <div class="form-group">
+      <button class="btn" id="setInterval">Start interval with clientId</button>
+    </div>
+      
+
+  </div>
+
+  <div class="col-md-9">
+  {{> intervals}}
+  </div>
+
+</div>
+</div>
+</template>
+
+<template name="intervals">
+  <h2>Running intervals</h2>
+
+  <div class="table-responsive">
+  <table id="interval-list" class="table table-condensed table-striped">
+  <thead><tr><th>clientId</th><th>Started</th><th>Counter</th><th>Actions</th></tr></thead>
+  <tbody>
+  {{#each intervals}}
+    <tr><td>{{clientId}}</td><td>{{formatTime createdAt}}</td><td>{{showCount counter}}</td><td><button class="btn btn-xs">clearInterval</button></td></tr>
+  {{/each}}
+  </tbody>
+  </table>
+  </div>
+
+
+</template>
