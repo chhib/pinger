@@ -4,7 +4,8 @@
     "basePackages": {
       "GAnalytics": {},
       "bootstrap-3": {},
-      "moment": {}
+      "moment": {},
+      "auto-nprogress": {}
     },
     "packages": {
       "GAnalytics": {
@@ -21,6 +22,16 @@
         "git": "https://github.com/acreeger/meteor-moment.git",
         "tag": "v2.5.1",
         "commit": "8c9bc5d3fc96705057737cb9743d555417f6e551"
+      },
+      "auto-nprogress": {
+        "git": "https://github.com/settinghead/meteor-auto-nprogress.git",
+        "tag": "v0.2.7",
+        "commit": "3fa87d5244e140cc5b49696585cd23b110c36467"
+      },
+      "nprogress": {
+        "git": "https://github.com/zhouzhuojie/meteor-nprogress.git",
+        "tag": "v0.0.3",
+        "commit": "ffd1c5dd400af64121197f4e637a215c4b6b1fc7"
       }
     }
   }

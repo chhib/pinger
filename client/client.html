@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Pinger</title>
-
+  <link href="/client.less" rel="stylesheet">
 </head>
 
 <body>
+  <header>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="#">Pinger</a>
+      </div>
+    </nav>
+  </header>
 
   {{> hello}}
 
@@ -21,46 +28,62 @@
 <template name="hello">
 <div class="container">
 <div class="row">
-<div class="col-md-12">
-  <h1>Pinger</h1>
-</div>
-</div>
-<div class="row">
-  <div class="col-md-3">
 
-    <h2>Set up new interval</h2>
-    
-    
-    <div class="form-group">
-      <label for="cid">clientId / cid</label>
-      <input class="form-control" type="text" id="cid" />
-    </div>
-    <div class="form-group">
-      <label for="page">pagePath / dp</label>
-      <input class="form-control" type="text" id="page"/>
-    </div>
-   
-
-    <div class="form-group">
-      <label for="event-cat">eventCategory / ec</label>
-      <input class="form-control" type="text" id="event-cat"/>
-    </div>
-
-
-    <div class="form-group">
-      <label for="event-act">eventAction / ea</label>
-      <input class="form-control" type="text" id="event-act"/>
-    </div>
-
-    <div class="form-group">
-      <button class="btn btn-md" id="setInterval">Start interval with clientId</button>
-    </div>
-      
-
+  <div class="col-lg-9">
+  {{> intervals}}
   </div>
 
-  <div class="col-md-9">
-  {{> intervals}}
+
+  <div class="col-lg-3">
+    <h4>Set up new interval</h4>
+    
+
+  <div class="well well-sm">
+    <div class="form-group">
+      <label for="cid">Client ID (cid)</label>
+      <input class="form-control" type="text" id="cid" />
+    </div>
+
+    <div class="form-group">
+      <label for="cid">Web property ID</label>
+      <input class="form-control" type="text" id="webproperty" value="UA-47831229-1" />
+    </div>
+
+    <div class="form-group">
+      <label for="ec">Event category (ec)</label>
+      <input class="form-control" type="text" id="ec" value="Stay-alive test"/>
+    </div>
+
+
+    <div class="form-group">
+      <label for="ea">Event action (ea)</label>
+      <input class="form-control" type="text" id="ea" value="Stay-alive test"/>
+    </div>
+
+    <div class="form-group">
+      <label for="event-act">Custom dimension index [1-9]+</label>
+      <input class="form-control" type="text" id="cd-index" value="1"/>
+    </div>
+
+    <div class="form-group">
+      <label for="event-act">Custom dimension value</label>
+      <input class="form-control" type="text" id="cd-value" value="my imported keyword"/>
+    </div>
+
+    <div class="form-group">
+      <label for="minutes">Interval</label>
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">Every</span>
+        <input type="text" id="minutes" class="form-control" value="28">
+        <span class="input-group-addon">minutes</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary btn-md" id="setInterval">Start interval with clientId</button>
+    </div>
+      
+</div>
   </div>
 
 </div>
@@ -68,18 +91,39 @@
 </template>
 
 <template name="intervals">
-  <h2>Running intervals</h2>
+  <h4>Running intervals</h4>
 
   <div class="table-responsive">
   <table id="interval-list" class="table table-condensed table-striped">
-  <thead><tr><th>clientId</th><th>Started</th><th>Counter</th><th>Actions</th></tr></thead>
+  <thead><tr><th>clientId</th><th>Started</th><th>Last ping</th><th>Nth<br/>minute</th><th># pings</th><th>CD<br/>Index</th><th>CD<br/>Value</th><th></th></tr></thead>
   <tbody>
   {{#each intervals}}
-    <tr><td>{{clientId}}</td><td>{{formatTime createdAt}}</td><td>{{showCount counter}}</td><td><button class="btn btn-xs">clearInterval</button></td></tr>
+    {{> interval_item}}
   {{/each}}
   </tbody>
   </table>
   </div>
+</template>
 
-
+<template name="interval_item">
+  <tr>
+    <td>
+      {{clientId}}
+    </td><td>
+      <span data-toggle="tooltip" data-placement="top" title="{{formatTime createdAt}}">{{fromNow createdAt}}</span>
+    </td>
+    <td>
+      <span data-toggle="tooltip" data-placement="top" title="{{formatTime updatedAt}}">{{fromNow updatedAt}}</span>
+    </td>
+    <td>
+      {{interval}}
+    </td><td>
+      {{showCount counter}}
+    </td><td>
+      {{cdIndex}}
+    </td><td>
+      {{cdValue}}
+    </td><td>
+      <button class="btn btn-xs btn-danger">&times Clear</button>
+    </td></tr>
 </template>

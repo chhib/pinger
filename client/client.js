@@ -4,14 +4,6 @@ Meteor.startup(function () {
   Meteor.subscribe('intervals');
 });
 
-Template.hello.greeting = function () {
-  return "Welcome to fakesite-nocookie.";
-};
-
-Template.intervals.intervals = function () {
-  return Intervals.find();
-};
-
 Template.hello.events({
   'click #send-ga-pageview' : function (e) {
     e.preventDefault();
@@ -54,23 +46,44 @@ Template.hello.events({
     e.preventDefault();
 
     if ($('#cid').val()) {
-      Meteor.call('setInterval', $('#cid').val());
+      Meteor.call('setInterval', {
+        clientId: $('#cid').val().trim(), 
+        interval: parseInt($('#minutes').val(), 10),
+        cdIndex: parseInt($('#cd-index').val(), 10),
+        cdValue: $('#cd-value').val().trim(),
+        ec: $('#ec').val().trim(),
+        ea: $('#ea').val().trim()
+      });
     } else {
 
     }
   }
 });
 
-Template.intervals.formatTime = function (date) {
-  return moment(date).format('YYYY-MM-DD HH:MM:SS');
+Template.interval_item.rendered = function () {
+
+  $('#interval-list td span').tooltip();
+
 };
 
-Template.intervals.showCount = function (counter) {
+Template.intervals.intervals = function () {
+  return Intervals.find();
+};
+
+
+Template.interval_item.formatTime = function (date) {
+  return (date) ? moment(date).format('YYYY-MM-DD HH:MM') : '-';
+};
+Template.interval_item.fromNow = function (date) {
+  return (date) ? moment(date).fromNow() : '-';
+}
+
+Template.interval_item.showCount = function (counter) {
   return (counter) ? counter : 0;
 };
 
-Template.intervals.events({
-  'click #interval-list tr button': function () {
+Template.interval_item.events({
+  'click button': function () {
     Meteor.call('clearInterval', this._id);
   }
 })

@@ -8,3 +8,5 @@ preserve-inputs
 http
 bootstrap-3
 moment
+auto-nprogress
+less

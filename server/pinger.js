@@ -4,22 +4,29 @@ Meteor.publish('intervals', function () {
 
 intervals = {};
 
-Meteor.methods({
-  'setInterval': function (clientId) {
-    var i=0;
-    Intervals.insert({clientId: clientId, createdAt: moment()._d });
-    var interval = Meteor.setInterval(function () {
-      i++;
-      console.log(i + "\t(" + clientId + ")");
+var gaParams = function (params) {
 
-      Intervals.update({clientId: clientId}, {$set: {
-          clientId: clientId,
-          counter: i
+}
+
+Meteor.methods({
+  'setInterval': function (params) {
+    var milliseconds = params.interval * 60 * 1000;
+
+    var i=0;
+    Intervals.insert(_.extend(params, {
+      createdAt: moment()._d 
+    }));
+
+    var intervalHandler = Meteor.setInterval(function () {
+      i++;
+      Intervals.update({clientId: params.clientId}, {$set: {
+          counter: i,
+          updatedAt: moment()._d
         }
       })
-    }, 1000);
+    }, milliseconds);
     
-    intervals[clientId] = interval;
+    intervals[params.clientId] = intervalHandler;
 
   },
 

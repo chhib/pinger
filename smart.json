@@ -2,6 +2,7 @@
   "packages": {
     "GAnalytics": {},
     "bootstrap-3": {},
-    "moment": {}
+    "moment": {},
+    "auto-nprogress": {}
   }
 }
