@@ -60,6 +60,12 @@ Template.hello.events({
   }
 });
 
+momentInterval = Meteor.setInterval(function () {
+  $('#interval-list td span[data-original-title]').each(function (i,itm) {
+    $(itm).html( Template.interval_item.fromNow($(itm).attr('data-original-title')) )
+  });
+},1000);
+
 Template.interval_item.rendered = function () {
 
   $('#interval-list td span').tooltip();
@@ -72,10 +78,10 @@ Template.intervals.intervals = function () {
 
 
 Template.interval_item.formatTime = function (date) {
-  return (date) ? moment(date).format('YYYY-MM-DD HH:MM') : '-';
+  return (date && date !== '-') ? moment(date).zone('+0100').format('YYYY-MM-DD HH:mm:ss') : '-';
 };
 Template.interval_item.fromNow = function (date) {
-  return (date) ? moment(date).fromNow() : '-';
+  return (date && date !== '-') ? moment(date).zone('+0100').fromNow() : '-';
 }
 
 Template.interval_item.showCount = function (counter) {
