@@ -33,6 +33,9 @@ Meteor.methods({
     
     // Adding a new interval
     if (Intervals.find({clientId: interval.clientId}).count() === 0) {
+
+      console.log(interval.clientId + ', was inserted');
+
       Intervals.insert(_.extend(interval, {
         createdAt: now._d
       }));
@@ -44,16 +47,15 @@ Meteor.methods({
       var lastPing = moment(interval.updatedAt || interval.createdAt); //Last ping, or has not yet pinged
       var millisecondsToNow = now.diff(lastPing);
       var catchupDelay = millisecondsToNow % (interval.interval * minuteInMilliseconds) // Wait the remainder 
-      console.log(interval.clientId + ', delay with ' + catchupDelay + ' ms');
+      console.log(interval.clientId + ', delay with ' + catchupDelay/1000 + ' seconds');
 
 
       Meteor.setTimeout(function () { 
 
-        // When delay has run, count +1 
-
+        // When delay has run, count up 1 
         interval.counter = (interval.counter) ? (interval.counter+1) : 1;
 
-        console.log(interval.clientId + ', counting +1 ' + interval.counter);
+        console.log(interval.clientId + ', updating count to ' + interval.counter);
         Intervals.update({clientId: interval.clientId}, {$set: {
             counter: interval.counter,
             updatedAt: moment()._d
