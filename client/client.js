@@ -47,12 +47,14 @@ Template.hello.events({
 
     if ($('#cid').val()) {
       Meteor.call('setInterval', {
-        clientId: $('#cid').val().trim(), 
+        clientId: $('#cid').val().trim(),
+        tid: $('#webproperty').val().trim(),
         interval: parseInt($('#minutes').val(), 10),
         cdIndex: parseInt($('#cd-index').val(), 10),
         cdValue: $('#cd-value').val().trim(),
         ec: $('#ec').val().trim(),
-        ea: $('#ea').val().trim()
+        ea: $('#ea').val().trim(),
+        active: true
       });
     } else {
 
@@ -88,8 +90,15 @@ Template.interval_item.showCount = function (counter) {
   return (counter) ? counter : 0;
 };
 
+Template.interval_item.printChecked = function () {
+  return (this.active) ? 'checked="checked"' : '';
+};
+
 Template.interval_item.events({
   'click button': function () {
     Meteor.call('clearInterval', this._id);
+  },
+  'click input[type="checkbox"]': function (e) {
+    Meteor.call('toggleActive', this._id, (e.target.checked) ? true : false, function () {});
   }
-})
+});

@@ -5,13 +5,39 @@ Meteor.publish('intervals', function () {
 var minuteInMilliseconds = 60 * 1000;
 intervals = {};
 
-var gaParams = function (params) {
-//
-}
 
+var callGA = function (clientId, isLastPing) {
+  var interval = Intervals.findOne({clientId: clientId});
+  var query = _.pick(interval, ['tid', 'ec', 'ea']);
+  query = _.extend(query, {
+    cid: interval.clientId,
+    t: 'event',
+    ni: '1',
+    v: '1'
+  });
+
+  if (isLastPing) {
+    query["cd" + interval.cdIndex] = interval.cdValue;
+  }
+
+  console.log('SIMULATE -- ' + moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
+  console.log(query);
+  console.log('\n');
+
+  // HTTP.get('http://www.google-analytics.com/collect', {
+  //   params: query
+  // }, function (error, result) {
+  //   if (error)
+  //     console.log(error);
+  //   else {
+  // console.log(moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
+  // console.log(query);
+  // console.log('\n');
+  // }
+    // });
+};
 
 var startInterval = function (params) {
-
   var milliseconds = params.interval * minuteInMilliseconds; 
   var i = params.counter || 0;
   var intervalHandler = Meteor.setInterval(function () {
@@ -20,7 +46,12 @@ var startInterval = function (params) {
         counter: i,
         updatedAt: moment()._d
       }
-    })
+    });
+
+    if (params.active) {
+      callGA(params.clientId);
+    }
+
   }, milliseconds);
   
   intervals[params.clientId] = intervalHandler;
@@ -28,7 +59,6 @@ var startInterval = function (params) {
 
 Meteor.methods({
   'setInterval': function (interval) {
-    
     var now = moment();
     
     // Adding a new interval
@@ -49,7 +79,6 @@ Meteor.methods({
       var catchupDelay = millisecondsToNow % (interval.interval * minuteInMilliseconds) // Wait the remainder 
       console.log(interval.clientId + ', delay with ' + catchupDelay/1000 + ' seconds');
 
-
       Meteor.setTimeout(function () { 
 
         // When delay has run, count up 1 
@@ -62,14 +91,16 @@ Meteor.methods({
           }
         });
 
+        if (interval.active) {
+          callGA(interval.clientId);
+        }
+
         console.log(interval.clientId + ', starting interval with ' + interval.interval + ' minutes');
         
         // And start the interval
         startInterval(Intervals.findOne({clientId: interval.clientId})); 
       }, catchupDelay);
-    }
-
-  
+    }  
   },
 
   'clearInterval': function (intervalId) {
@@ -78,7 +109,14 @@ Meteor.methods({
     Meteor.clearInterval(intervals[interval.clientId]);
     delete intervals[interval.clientId];
 
+    // Make final call to GA with custom dimension
+    callGA(interval.clientId, interval.active);
+
     Intervals.remove(intervalId);
+  },
+
+  'toggleActive': function (intervalId, toggle) {
+    Intervals.update(intervalId, {$set: {active: toggle}});
   }
 });
 

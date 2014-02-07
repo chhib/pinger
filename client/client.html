@@ -95,7 +95,7 @@
 
   <div class="table-responsive">
   <table id="interval-list" class="table table-condensed table-striped">
-  <thead><tr><th>clientId</th><th>Started</th><th>Last ping</th><th>Nth<br/>minute</th><th># pings</th><th>CD<br/>Index</th><th>CD<br/>Value</th><th></th></tr></thead>
+  <thead><tr><th></th><th>clientId</th><th>Started</th><th>Last ping</th><th>Nth<br/>minute</th><th># pings</th><th>CD<br/>Index</th><th>CD<br/>Value</th><th></th></tr></thead>
   <tbody>
   {{#each intervals}}
     {{> interval_item}}
@@ -107,6 +107,9 @@
 
 <template name="interval_item">
   <tr>
+    <td>
+      <input type="checkbox" class="active" {{printChecked}}>
+    </td>
     <td>
       {{clientId}}
     </td><td>
