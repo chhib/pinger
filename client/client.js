@@ -68,10 +68,33 @@ momentInterval = Meteor.setInterval(function () {
   });
 },1000);
 
-Template.interval_item.rendered = function () {
+// Ugly hack to not blink the first time.
+blink = [];
+Template.interval_item.created = function () {
+  blink.push(this.data._id);
+}
 
+Template.interval_item.rendered = function () {
   $('#interval-list td span').tooltip();
 
+  if (blink.indexOf(this.data._id) > -1) {
+    blink.splice(blink.indexOf(this.data._id),1);
+  } else { 
+    
+    var initialBackgroundColor = $(this.find('td')).css('backgroundColor');
+    var initialColor = $(this.find('td')).css('color');
+    var td = this.findAll('td');
+
+    $(td).css({
+      backgroundColor: "#7EB1DD" 
+      // color: "#ffffff"
+    }).animate({
+      backgroundColor: initialBackgroundColor,
+      // color: initialColor,
+    }, 1000, 'swing', function () {
+      $(td).removeAttr('style');
+    });
+  } 
 };
 
 Template.intervals.intervals = function () {
@@ -91,7 +114,7 @@ Template.interval_item.showCount = function (counter) {
 };
 
 Template.interval_item.printChecked = function () {
-  return (this.active) ? 'checked="checked"' : '';
+  return (this.active) ? 'checked' : '';
 };
 
 Template.interval_item.events({

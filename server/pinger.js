@@ -20,21 +20,21 @@ var callGA = function (clientId, isLastPing) {
     query["cd" + interval.cdIndex] = interval.cdValue;
   }
 
-  console.log('SIMULATE -- ' + moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
-  console.log(query);
-  console.log('\n');
-
-  // HTTP.get('http://www.google-analytics.com/collect', {
-  //   params: query
-  // }, function (error, result) {
-  //   if (error)
-  //     console.log(error);
-  //   else {
-  // console.log(moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
+  // console.log('SIMULATE -- ' + moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
   // console.log(query);
   // console.log('\n');
-  // }
-    // });
+
+  HTTP.get('http://www.google-analytics.com/collect', {
+    params: query
+  }, function (error, result) {
+    if (error)
+      console.log(error);
+    else {
+      console.log(moment().format('YYYY-MM-DD (HH:mm)') +  ': queried successfully.');
+      console.log(query);
+      console.log('\n');
+    }
+  });
 };
 
 var startInterval = function (params) {

@@ -3,6 +3,7 @@
     "GAnalytics": {},
     "bootstrap-3": {},
     "moment": {},
-    "auto-nprogress": {}
+    "auto-nprogress": {},
+    "jqueryui": {}
   }
 }
