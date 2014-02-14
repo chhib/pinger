@@ -2,7 +2,7 @@ Meteor.publish('intervals', function () {
   return Intervals.find({});
 });
 
-var minuteInMilliseconds = 60 * 1000;
+var minuteInMilliseconds = 1000; // * 60;
 intervals = {};
 
 

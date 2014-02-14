@@ -5,43 +5,6 @@ Meteor.startup(function () {
 });
 
 Template.hello.events({
-  'click #send-ga-pageview' : function (e) {
-    e.preventDefault();
-    
-    HTTP.get('http://www.google-analytics.com/collect', {
-      params: {
-        v: "1",
-        tid: Session.get('UA'),
-        cid: $('#cid').val(),
-
-        t: 'pageview',
-        dp: $('#page').val()
-      }
-    }, function () {});
-
-  },
-  'click #send-ga-event' : function (e) {
-    e.preventDefault();
-
-    var params = {
-      v: "1",
-      tid: Session.get('UA'),
-      cid: $('#cid').val(),
-
-      t: 'event',
-      ec: $('#event-cat').val(),
-      ea: $('#event-act').val(),
-      ni: "1"
-    };
-
-    if ($('#page').val()) {
-      params["dp"] = $('#page').val();
-    }
-
-    HTTP.get('http://www.google-analytics.com/collect', {
-      params: params
-    }, function () {});
-  },
   'click #setInterval': function (e) {
     e.preventDefault();
 
@@ -54,7 +17,7 @@ Template.hello.events({
         cdValue: $('#cd-value').val().trim(),
         ec: $('#ec').val().trim(),
         ea: $('#ea').val().trim(),
-        active: true
+        active: $('#active').is(':checked') ? 1 : 0
       });
     } else {
 
